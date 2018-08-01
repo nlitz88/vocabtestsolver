@@ -1,0 +1,77 @@
+<!Doctype html>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../static/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Fredoka+One|Titan+One" rel="stylesheet">
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+        
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="../static/process.js"></script>
+        
+        
+    
+    </head>
+    <body>
+    
+      <div id="navigation">
+        <div id="logoField">
+            <p>VocabTest-Solver</p>
+        </div>
+            <ul id="navButtons">
+            <li>About</li>
+            <li>FAQ</li>
+            <li>Contact</li>
+        </ul>
+      </div>
+    
+    <div id="bodyContainer">
+      
+        <div id="leftBlock">
+        </div>
+      
+        <div id="mainBlock">
+            <div id="introField">
+                <p>Complete VocabTest assignments automatically!</p>
+            </div>
+          
+            <form id="inputField">
+                <p class="errorField"></p>
+                <input type="text" name="listLink" id="linkField" placeholder="Link to vocabtest list or  assignment">
+                <input type="text" name="email" id="emailField" placeholder="Teacher email">
+                <p class="errorField"></p>
+                <input type="text" name="username" id="userField" placeholder="Username">
+                <input type="password" name="password" id="passField" placeholder="Password">
+                
+                <button id="processStart" class="processStart-default"><a href="#">Start</a></button>
+            </form>
+            
+            <a href="#" id="detailButton">Show Details</a>
+            <div id="detailMonitor">
+                <p class="detailMonitorTop">Words Processed: </p>
+                <p class="detailMonitorTopData"></p>
+                <p class="detailMonitorTop">Percent Done: </p>
+                <p class="detailMonitorTopData"></p>
+                <p class="detailMonitorTop">Elapsed Time: </p>
+                <p class="detailMonitorTopData"></p>
+                <br>
+                <p class="detailMonitorTop">Current Operation: </p>
+                <p class="detailMonitorTopData"></p>
+                <br>
+                <textarea id="solverOutput"></textarea>
+                <!--<p class="detailMonitorTop">Remaining Time: </p>
+                <p class="detailMonitorTopData"></p> -->
+                
+                
+            </div>
+            
+        </div>
+      
+        <div id="rightBlock">
+        </div>
+      
+    </div>
+    
+    </body>
+</html>
