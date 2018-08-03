@@ -220,6 +220,7 @@ class list_solver(Thread):
                 print("Element not loaded, refreshing page...")
                 self.currentCommand = "Reloading page, elements failed to load"
                 browser.refresh()
+                time.sleep(2)
                 continue
             
             
