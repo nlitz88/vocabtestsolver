@@ -68,7 +68,7 @@ class list_solver(Thread):
         
         
         choiceList = ['a', 'b', 'c', 'd', 'e']  # CORRESPONDING SENDABLE KEY VALUES
-        timeThreshold = 20  # Wating threshold for WebDriverWait
+        timeThreshold = 60  # Wating threshold for WebDriverWait
         loginLink = 'https://www.vocabtest.com/login.php'
         
         
