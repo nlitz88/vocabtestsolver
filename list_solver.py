@@ -217,6 +217,7 @@ class list_solver(Thread):
             except:
                 print("Element not loaded, refreshing page...")
                 browser.refresh()
+                continue
             
             
             found = False
