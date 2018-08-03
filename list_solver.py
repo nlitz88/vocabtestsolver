@@ -207,7 +207,7 @@ class list_solver(Thread):
         
         while(len(self.word_list) < self.list_length):
             
-            
+            print(browser)
             vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
             definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
             answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
