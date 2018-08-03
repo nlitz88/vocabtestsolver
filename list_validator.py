@@ -21,19 +21,18 @@ class list_validator(Thread):
         self.creds_valid = None
         self.link_valid = None
 
-
+        """
         chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
         opts = ChromeOptions()
         opts.binary_location = chrome_bin
         self.browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=opts)
+        """
 
-        """
         options = ChromeOptions()
-        options.binary_location = os.env.get('GOOGLE_CHROME_SHIM', None)
-        #options.add_argument("--headless")
+        options.add_argument("--headless")
         #options.add_experimental_option("detach", True)
-        self.browser =clswebdriver.Chrome(chrome_options=options)
-        """
+        self.browser = webdriver.Chrome(chrome_options=options)
+
 
         Thread.__init__(self)
 

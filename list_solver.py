@@ -46,10 +46,17 @@ class list_solver(Thread):
         self.ellapsedTime = 0
         self.initTime = time.time() #time of initialization
 
+        """
         chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
         opts = ChromeOptions()
         opts.binary_location = chrome_bin
         self.browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=opts)
+        """
+        
+        options = ChromeOptions()
+        options.add_argument("--headless")
+        #options.add_experimental_option("detach", True)
+        self.browser = webdriver.Chrome(chrome_options=options)
         
         Thread.__init__(self)
     
