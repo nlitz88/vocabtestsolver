@@ -52,7 +52,7 @@ class list_solver(Thread):
         opts.binary_location = chrome_bin
         self.browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=opts)
         """
-        
+
         options = ChromeOptions()
         options.add_argument("--headless")
         #options.add_experimental_option("detach", True)
@@ -225,12 +225,12 @@ class list_solver(Thread):
                     self.correctDefinition = definitions[x].text     #change to self.correctDefinition
                     
                     self.currentCommand = "Correct Definition: " + self.correctDefinition + "Answer found at letter " + choiceList[x]
-                    print("Correct Definition: " + self.correctDefinition)   #debugging
-                    print("Answer found at letter " + choiceList[x])         #debugging
+                    #print("Correct Definition: " + self.correctDefinition)   #debugging
+                    #print("Answer found at letter " + choiceList[x])         #debugging
                     
                     
                     if(is_duplicate(vocabWord.text)):
-                        print("!!Duplicate Word!!") #debugging
+                        #print("!!Duplicate Word!!") #debugging
                         self.currentCommand = "!!Duplicate Word!!"
                     
                     else:

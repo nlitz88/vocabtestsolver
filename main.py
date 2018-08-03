@@ -95,23 +95,18 @@ def _start_process():
 @app.route('/_process_progress')
 def _process_progress():
     
+    
     # request.args.get used to get "dictionary" value from 'key': key
     key = request.args.get('key', '', type=str)
-    print("THE KEY IS " + str(key))
-    print("")
-    print("Threaded Processes from process_progress: ")
-    print(threaded_processes)
-    print(" ")
-    
-    """
     if not key in threaded_processes:
         print(" ")
         print("key not found in list")
         print("key: " + str(key))
         print(" ")
         print(threaded_processes)
-        print(" ")"""
+        print(" ")
     
+
     percent_done = threaded_processes[key].percent_done()
     completed_words = threaded_processes[key].get_completed_words()
     current_word = threaded_processes[key].get_current_word()
