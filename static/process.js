@@ -109,7 +109,7 @@
                 //console.log("command is the same")
             }
             else{
-                $('#solverOutput').append(data.command + "\n");
+                $('#solverOutput').append("OUT: " + data.command + "\n");
                 prev_command = data.command;
                 //console.log("command has changed")
             }

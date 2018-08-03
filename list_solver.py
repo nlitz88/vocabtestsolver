@@ -215,7 +215,10 @@ class list_solver(Thread):
                 print('')
                 print(vocabWord.text + " updated: " + " qnaBODY " + str(self.iterations))   #debugging
             except:
+                # ESSENTIAL TO ENSURE THAT PROCESS DOESN'T GET HUNG UP ON WAITING FOR ELEMENT ON PAGE
+                # REFRESH IN ORDER TO HAVE ELEMENTES LOAD AGAIN
                 print("Element not loaded, refreshing page...")
+                self.currentCommand("Reloading page, elements failed to load")
                 browser.refresh()
                 continue
             
