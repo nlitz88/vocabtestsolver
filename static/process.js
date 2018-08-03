@@ -118,7 +118,6 @@
             
             if (!data.done) {
                 setTimeout(function() {
-                    console.log("process progress started from processprogress");
                     process_progress(data.key);
                 }, 100);
             }

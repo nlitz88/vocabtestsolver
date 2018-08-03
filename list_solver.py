@@ -68,7 +68,7 @@ class list_solver(Thread):
         
         
         choiceList = ['a', 'b', 'c', 'd', 'e']  # CORRESPONDING SENDABLE KEY VALUES
-        timeThreshold = 60  # Wating threshold for WebDriverWait
+        timeThreshold = 20  # Wating threshold for WebDriverWait
         loginLink = 'https://www.vocabtest.com/login.php'
         
         
@@ -208,11 +208,15 @@ class list_solver(Thread):
         while(len(self.word_list) < self.list_length):
             
             print(browser)
-            vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
-            definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
-            answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
-            print('')
-            print(vocabWord.text + " updated: " + " qnaBODY " + str(self.iterations))   #debugging
+            try:
+                vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
+                definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
+                answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
+                print('')
+                print(vocabWord.text + " updated: " + " qnaBODY " + str(self.iterations))   #debugging
+            except:
+                print("Element not loaded, refreshing page...")
+                browser.refresh()
             
             
             found = False
