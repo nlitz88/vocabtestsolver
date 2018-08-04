@@ -95,7 +95,7 @@ def _start_process():
 @app.route('/_process_progress')
 def _process_progress():
     
-    
+
     # request.args.get used to get "dictionary" value from 'key': key
     key = request.args.get('key', '', type=str)
     if not key in threaded_processes:
@@ -114,6 +114,7 @@ def _process_progress():
     current_operation = threaded_processes[key].get_current_operation()
     current_command = threaded_processes[key].get_command_output()
     ellapsed_time = threaded_processes[key].get_time_ellapsed()
+    
     
     done = False
     if percent_done == 100:
