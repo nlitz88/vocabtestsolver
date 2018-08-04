@@ -212,8 +212,6 @@ class list_solver(Thread):
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
                 definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
                 answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
-                print('')
-                print(vocabWord.text + " updated: " + " qnaBODY " + str(self.iterations))   #debugging
             except:
                 # ESSENTIAL TO ENSURE THAT PROCESS DOESN'T GET HUNG UP ON WAITING FOR ELEMENT ON PAGE
                 # REFRESH IN ORDER TO HAVE ELEMENTES LOAD AGAIN
@@ -223,6 +221,8 @@ class list_solver(Thread):
                 time.sleep(2)
                 continue
             
+            print('')
+            print(vocabWord.text + " updated: " + " qnaBODY " + str(self.iterations))   #debugging
             
             found = False
             for x, button in enumerate(answerButtons):
