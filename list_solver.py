@@ -210,8 +210,11 @@ class list_solver(Thread):
             print(browser)
             try:
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
+                print("vocab word found")
                 definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
+                print("definitions found")
                 answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
+                print("answerbuttons found")
             except:
                 # ESSENTIAL TO ENSURE THAT PROCESS DOESN'T GET HUNG UP ON WAITING FOR ELEMENT ON PAGE
                 # REFRESH IN ORDER TO HAVE ELEMENTES LOAD AGAIN
