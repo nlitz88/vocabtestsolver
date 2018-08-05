@@ -101,8 +101,18 @@
             $('#processStart').progressbar('option', 'value', data.percent);
             $('.detailMonitorTopData:eq(0)').text(data.words);
             $('.detailMonitorTopData:eq(1)').text(data.percent + "%");
-            $('.detailMonitorTopData:eq(2)').text(data.time + "s");
+            //add if structure here to switch to minutes
+            //$('.detailMonitorTopData:eq(2)').text(data.time + "s");
             $('.detailMonitorTopData:eq(3)').text(data.operation);
+            
+            if(data.time >= 60) {
+                var time = Math.round(data.time / 60);
+                $('.detailMonitorTopData:eq(2)').text(time + "m");
+            }
+            else {
+                $('.detailMonitorTopData:eq(2)').text(data.time + "s");
+            }
+            
             
             if(data.command == prev_command){
                 prev_command = data.command;
