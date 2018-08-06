@@ -50,8 +50,13 @@ class list_validator(Thread):
                     return True
                 else:
                     return False
-
-            browser.get(self.link)
+            
+            try:
+                browser.get(self.link)
+            except:
+                link_valid = False
+                print("link invalid, not real link")
+                
             try:
                 link_valid = WebDriverWait(browser, 5).until(destination_valid)
                 print("link valid")
