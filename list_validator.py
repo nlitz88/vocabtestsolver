@@ -51,6 +51,8 @@ class list_validator(Thread):
                 else:
                     return False
             
+            # make attempt to get link_valid
+            # prevents hang if link is completely invalid
             try:
                 browser.get(self.link)
             except:

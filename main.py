@@ -37,7 +37,7 @@ def _validate():
 
     # Dynamic wait for values to change from initial None
     while(validator.get_link_valid() == None or validator.get_creds_valid() == None):
-        print("values not ready yet")
+        # print("values not ready yet")
         time.sleep(0.5)
 
     link_valid = validator.get_link_valid()

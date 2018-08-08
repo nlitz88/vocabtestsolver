@@ -47,8 +47,7 @@
                     }
                 }
                 else {
-                    console.log(data.loginVvalid);
-                    console.log('valid')
+                    // make separate start_process function for this section
                     $.getJSON('/_start_process', {
                         'list_link' : $('#linkField').val(),
                         'email' : $('#emailField').val(),
@@ -56,7 +55,7 @@
                         'password' : $('#passField').val()
                     },
                     function(data) {
-        
+                        
                         $('#processStart').attr('disabled','disabled');
                         $('#processStart').progressbar('option', 'disabled', false);
                         $('#processStart').progressbar('option', 'value', data.percent);
@@ -75,14 +74,6 @@
                 }
 
             })
-
-            
-            //potentially replace with jquery addclass (preconfigured class with progressbar properties)
-            // in css, this would be "#processStart div" (jquery needs the >)
-            
-            
-            
-            
             return false;  
             
         });
@@ -132,9 +123,17 @@
                 }, 100);
             }
             else {
-                $('#processStart').removeAttr('disabled');
+                //$('#processStart').removeAttr('disabled');
                 //$('#progress').progressbar('option', 'value', 0);
                 //$('#progress').progressbar('option', 'disabled', true);
+                //re-enable start button and destroy progressbar
+                 $('#processStart').progressbar("destroy");
+                 $('#processStart').css({'height': '80px'});
+                 $('#processStart a').show();
+                 $('#processStart').prop('disabled', false);
+                 
+                 $('.detailMonitorTopData:eq(3)').text("Completed");
+                 $('#solverOutput').append("OUT: " + "results sent" + "\n");
             }
         });
     }

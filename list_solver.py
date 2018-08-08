@@ -207,7 +207,6 @@ class list_solver(Thread):
         
         while(len(self.word_list) < self.list_length):
             
-            print(browser)
             try:
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
                 print("vocab word found")
@@ -224,8 +223,8 @@ class list_solver(Thread):
                 time.sleep(2)
                 continue
             
-            print('')
-            print(vocabWord.text + " updated: " + " qnaBODY " + str(self.iterations))   #debugging
+            #print('')
+            #print(vocabWord.text + " updated: " + " qnaBODY " + str(self.iterations))   #debugging
             
             found = False
             for x, button in enumerate(answerButtons):
@@ -234,19 +233,15 @@ class list_solver(Thread):
                 time.sleep(.2)
                 
                 if button.text == '✓':
-                    self.correctDefinition = definitions[x].text     #change to self.correctDefinition
-                    
-                    self.currentCommand = "Correct Definition: " + self.correctDefinition + "Answer found at letter " + choiceList[x]
-                    #print("Correct Definition: " + self.correctDefinition)   #debugging
-                    #print("Answer found at letter " + choiceList[x])         #debugging
-                    
+                    self.correctDefinition = definitions[x].text
                     
                     if(is_duplicate(vocabWord.text)):
                         #print("!!Duplicate Word!!") #debugging
-                        self.currentCommand = "!!Duplicate Word!!"
+                        self.currentCommand = (vocabWord.text).upper() + ": duplicate, already found"
                     
                     else:
                         self.word_list[vocabWord.text] = self.correctDefinition
+                        self.currentCommand = (vocabWord.text).upper() + ": " + self.correctDefinition
                     
                     break
                     
@@ -257,7 +252,7 @@ class list_solver(Thread):
                   
                     
                     
-        print("List Learning Completed!")   #debugging
+        #print("List Learning Completed!")   #debugging
         
         
         
@@ -284,21 +279,22 @@ class list_solver(Thread):
         
         for x in range(self.list_length):
             
-            
+            # add try/except
             vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
             definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
             answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
-            print(vocabWord.text)   #debugging
+            #print(vocabWord.text)   #debugging
             
             for word in self.word_list:
                 if word == vocabWord.text:
                     self.correctDefinition = self.word_list[word]
-                    print(self.correctDefinition)    #debugging
+                    #print(self.correctDefinition)    #debugging
                     
             for x, definition in enumerate(definitions):
                 if definition.text == self.correctDefinition:
                     answerButtons[x].click()
-                    print("Definition matched at button " + choiceList[x])
+                    #print("Definition matched at button " + choiceList[x])
+                    self.currentCommand = vocabWord.text + " definition matched at button " + x
                     
             self.iterations += 1
             self.completedWords += 1
