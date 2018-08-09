@@ -130,8 +130,10 @@
                 //$('#progress').progressbar('option', 'disabled', true);
                 //re-enable start button and destroy progressbar
                  $('#processStart').progressbar("destroy");
-                 $('#processStart').css({'background-color': 'transparent'});
+                 $('#processStart').css({'background-color': '#e67e22'});
+                 $('#processStart a').css({'color': '#e67e22'});
                  $('#processStart a').show();
+                 $('#processStart a').css({'color': 'white'});
                  $('#processStart a').text("Completed");
                  
                  $('.detailMonitorTopData:eq(3)').text("Completed");

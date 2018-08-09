@@ -45,6 +45,7 @@ class list_solver(Thread):
         self.iterations = 1
         self.ellapsedTime = 0
         self.initTime = time.time() #time of initialization
+        self.loggedIn = None
 
         """
         chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
@@ -92,7 +93,7 @@ class list_solver(Thread):
         # INCLUDED: SEND RESULTS ...
         
         def get_list_length(browser):
-            # ADD TRY EXCEPT: on except, return false
+            
             self.currentOperation = "getting list length"
             indicator = browser.find_element_by_id('questionNum')
             length = indicator.text
@@ -105,15 +106,13 @@ class list_solver(Thread):
             def destination_valid(browser):
                 indicator = browser.find_element_by_xpath('//*[@id="header"]/tbody/tr/td[3]/a[2]')
                 if indicator.text == 'Log Out':
-                    #print('creds valid')
                     return True
                 else:
-                    #print('creds invalid')
                     return False
             
-            # ADD TRY EXCEPT: on except, return false
             self.currentCommand = "logging in " + usr
             self.currentOperation = "logging in"
+            
             time.sleep(2)   # ADD WAITING FOR USERFIELD TO LOAD (might not needed as it waits until refresh)
 
             usrField = browser.find_element_by_id("user_login")
@@ -127,9 +126,10 @@ class list_solver(Thread):
             
             try:
                 loggedIn = WebDriverWait(browser, 6).until(destination_valid)
-                #print("login successful")
+                return True
             except:
                 print("login not successful for "  + usr)
+                return False
                 
                          
         def send_results(browser, email):
@@ -262,11 +262,10 @@ class list_solver(Thread):
                 # REFRESH IN ORDER TO HAVE ELEMENTES LOAD AGAIN
                 print_message("Elements not loaded, reloading page")
                 self.currentCommand = "Reloading page, elements failed to load"
+                
                 browser = restart_session(browser, self.link)
-                print("waiting 10 seconds")
-                print(browser.current_url)
-                time.sleep(1)
                 self.iterations = 1
+                
                 continue
             
             #print('')
@@ -309,7 +308,12 @@ class list_solver(Thread):
         
         browser.get(loginLink)
         elimCSS(browser)
-        login(browser, self.username, self.password)
+        
+        # Ensures that login process bypasses browser hang
+        self.loggedIn = login(browser, self.username, self.password)
+        while not self.loggedIn:
+            loggedIn = login(browser, self.username, self.password)
+        
         browser.get(self.link)
         elimCSS(browser)
         
@@ -334,11 +338,16 @@ class list_solver(Thread):
                 #print(vocabWord.text)   #debugging
             except:
                 x -= 1
+                
+                # SAVING LIST CAPABILITY NEEDS TO BE ADDED
+                # IF NOT, RESTART SOLVING LIST
+                
                 print_message("Elements not loaded, reloading page")
                 self.currentCommand = "Reloading page, elements failed to load"
-                browser.get(self.link)
-                time.sleep(2)
-                continue
+                
+                browser = restart_session(browser, self.link)
+                
+                break
                 
             
             for word in self.word_list:
@@ -359,6 +368,8 @@ class list_solver(Thread):
         
         
         # INSERT EMAIL TEACHER FUNCTION
+        # If doesn't load, go to account and send details manually.
+        # consider sending from account permanently rather than waiting on fetch
         send_results(browser, self.email)
         
         
