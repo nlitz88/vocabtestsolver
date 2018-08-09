@@ -32,14 +32,25 @@ class list_validator(Thread):
         options.add_argument("--headless")
         #options.add_experimental_option("detach", True)
         self.browser = webdriver.Chrome(chrome_options=options)
-
+        
 
         Thread.__init__(self)
 
     def run(self):
-
+        
+        
+        # BEGINNING OF VALIDATION DEPENDENT FUNCTIONS
+        
         browser = self.browser
-        print("browser initiated")
+        
+        def print_message(message):
+            linkDetail = self.link.split('?')
+            
+            print('')
+            print("VALIDATOR INSTANCE: " + self.username + " | " + linkDetail[1])
+            print("MESSAGE: " + message)
+            print('')
+        
 
         def check_list(browser):
             # ADD TRY EXCEPT: on except, return false
@@ -57,16 +68,13 @@ class list_validator(Thread):
                 browser.get(self.link)
             except:
                 link_valid = False
-                print("link invalid, not real link")
+                
                 
             try:
                 link_valid = WebDriverWait(browser, 5).until(destination_valid)
-                print("link valid")
-                print(link_valid)
             except:
                 link_valid = False
-                print("link invalid")
-            
+                
             return link_valid
     
 
@@ -75,10 +83,10 @@ class list_validator(Thread):
             def destination_valid(browser):
                 indicator = browser.find_element_by_xpath('//*[@id="header"]/tbody/tr/td[3]/a[2]')
                 if indicator.text == 'Log Out':
-                    print('creds valid')
+                    #print('creds valid')
                     return True
                 else:
-                    print('creds invalid')
+                    #print('creds invalid')
                     return False
 
             browser.get('https://www.vocabtest.com/login.php')
@@ -95,10 +103,10 @@ class list_validator(Thread):
 
             try:
                 creds_valid = WebDriverWait(browser, 6).until(destination_valid)
-                print(creds_valid)
+                #print(creds_valid)
             except:
                 creds_valid = False
-                print(creds_valid)
+                #print(creds_valid)
             
             return creds_valid
 

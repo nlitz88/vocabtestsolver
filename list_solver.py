@@ -101,9 +101,20 @@ class list_solver(Thread):
         
 
         def login(browser, usr, pswd):
+            
+            def destination_valid(browser):
+                indicator = browser.find_element_by_xpath('//*[@id="header"]/tbody/tr/td[3]/a[2]')
+                if indicator.text == 'Log Out':
+                    #print('creds valid')
+                    return True
+                else:
+                    #print('creds invalid')
+                    return False
+            
             # ADD TRY EXCEPT: on except, return false
+            self.currentCommand = "logging in " + usr
             self.currentOperation = "logging in"
-            time.sleep(1)   # ADD WAITING FOR USERFIELD TO LOAD (might not needed as it waits until refresh)
+            time.sleep(2)   # ADD WAITING FOR USERFIELD TO LOAD (might not needed as it waits until refresh)
 
             usrField = browser.find_element_by_id("user_login")
             pswdField = browser.find_element_by_id("user_password")
@@ -113,8 +124,14 @@ class list_solver(Thread):
 
             logBtn2 = browser.find_element_by_xpath('//*[@id="loginForm"]/a')
             logBtn2.click()
-        
-
+            
+            try:
+                loggedIn = WebDriverWait(browser, 6).until(destination_valid)
+                #print("login successful")
+            except:
+                print("login not successful for "  + usr)
+                
+                         
         def send_results(browser, email):
             
             def email_loaded(browser):
@@ -126,13 +143,40 @@ class list_solver(Thread):
             
             self.currentOperation = "sending results"
             
-            emailField = WebDriverWait(browser, timeThreshold).until(email_loaded)
+            try:
+                emailField = WebDriverWait(browser, timeThreshold).until(email_loaded)
+            except:
+                print("Email field not present, list not completed")
+                # add system to reenter list solving
+                
             emailField.send_keys(email)
             
             sendBtn = browser.find_element_by_xpath('//*[@id="contentHolder"]/form/div[2]/input[5]')
             sendBtn.click()
+            print("sending results complete")
 
-
+            
+        def print_message(message):
+            linkDetail = self.link.split('?')
+            
+            print('')
+            print("INSTANCE: " + self.username + " | " + self.email + " | " + linkDetail[1])
+            print("MESSAGE: " + message)
+            print('')        
+        
+        
+        def restart_session(browser, url):
+            print("previous browser: " + str(browser))
+            browser.quit()
+            
+            options = ChromeOptions()
+            options.add_argument("--headless")
+            #options.add_experimental_option("detach", True)
+            self.browser = webdriver.Chrome(chrome_options=options)
+            print("new browser: " + str(self.browser))
+            self.browser.get(url)
+            return self.browser
+            
         
         
         # BEGINNING OF SOLVER DEPENDENT FUNCTIONS
@@ -193,7 +237,7 @@ class list_solver(Thread):
         browser.get(self.link)
         elimCSS(browser)    #decreases loadingtimes
         get_list_length(browser)
-        print(self.list_length)
+        #print(self.list_length)
         
 
 
@@ -207,20 +251,22 @@ class list_solver(Thread):
         
         while(len(self.word_list) < self.list_length):
             
+            print("Iterations: " + str(self.iterations))
+            print("Browser: " + str(browser))
             try:
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
-                print("vocab word found")
                 definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
-                print("definitions found")
                 answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
-                print("answerbuttons found")
             except:
                 # ESSENTIAL TO ENSURE THAT PROCESS DOESN'T GET HUNG UP ON WAITING FOR ELEMENT ON PAGE
                 # REFRESH IN ORDER TO HAVE ELEMENTES LOAD AGAIN
-                print("Element not loaded, refreshing page...")
+                print_message("Elements not loaded, reloading page")
                 self.currentCommand = "Reloading page, elements failed to load"
-                browser.refresh()
-                time.sleep(2)
+                browser = restart_session(browser, self.link)
+                print("waiting 10 seconds")
+                print(browser.current_url)
+                time.sleep(1)
+                self.iterations = 1
                 continue
             
             #print('')
@@ -267,7 +313,8 @@ class list_solver(Thread):
         browser.get(self.link)
         elimCSS(browser)
         
-        
+        # iterations only used to index qna body elements
+        # as the do NOT affect process_progress
         self.iterations = 1
         
         
@@ -279,11 +326,20 @@ class list_solver(Thread):
         
         for x in range(self.list_length):
             
-            # add try/except
-            vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
-            definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
-            answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
-            #print(vocabWord.text)   #debugging
+            #print_message(str(browser))
+            try:
+                vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
+                definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
+                answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
+                #print(vocabWord.text)   #debugging
+            except:
+                x -= 1
+                print_message("Elements not loaded, reloading page")
+                self.currentCommand = "Reloading page, elements failed to load"
+                browser.get(self.link)
+                time.sleep(2)
+                continue
+                
             
             for word in self.word_list:
                 if word == vocabWord.text:
@@ -294,7 +350,7 @@ class list_solver(Thread):
                 if definition.text == self.correctDefinition:
                     answerButtons[x].click()
                     #print("Definition matched at button " + choiceList[x])
-                    self.currentCommand = vocabWord.text + " definition matched at button " + x
+                    self.currentCommand = vocabWord.text + ": definition matched at button " + str(x)
                     
             self.iterations += 1
             self.completedWords += 1
@@ -305,9 +361,10 @@ class list_solver(Thread):
         # INSERT EMAIL TEACHER FUNCTION
         send_results(browser, self.email)
         
-
+        
         # BEGINNING OF CONCLUDING FUNCTIONS.
         self.currentOperation = "list completed"
+        print_message("List completed. Instance finished")
         #   - potentially add preview of words in command output
         #   - provide email confirmation in command output
     

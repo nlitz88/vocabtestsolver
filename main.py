@@ -42,11 +42,8 @@ def _validate():
 
     link_valid = validator.get_link_valid()
     login_valid = validator.get_creds_valid()
-    print("link valid: " + str(link_valid))
-    print("login_valid: " + str(login_valid))
-
-    print("validator alive?")
-    print(validator.is_alive())
+    #print("validator alive?")
+    #print(validator.is_alive())
 
     return jsonify(loginValid = login_valid, linkValid = link_valid)
 
@@ -66,8 +63,14 @@ def _start_process():
     # add object to threaded_processes dictionary
     key = str(uuid4())
     threaded_processes[key] = solver
-    print("threaded processes from start_process")
-    print(threaded_processes)
+    
+    # report new instance
+    print('')
+    print("NEW INSTANCE: " + key)
+    linkDetail = list_link.split('?')
+    print(username + " | " + email + " | " + linkDetail[1])
+    print("Active Instances: " + str(len(threaded_processes)))
+    print('')
 
     percent_done = threaded_processes[key].percent_done()
     completed_words = threaded_processes[key].get_completed_words()
@@ -119,8 +122,6 @@ def _process_progress():
     done = False
     if percent_done == 100:
         done = True
-        # debugging
-        print(threaded_processes[key].is_alive())
         del threaded_processes[key]
     
     # _process_progress returns percent done to jquery .get function(data) as "data"

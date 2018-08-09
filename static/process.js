@@ -116,24 +116,27 @@
             }
             
             
-            
+            // if not yet completed
             if (!data.done) {
                 setTimeout(function() {
                     process_progress(data.key);
                 }, 100);
             }
+            // if completed
+            // possible add check for whether results sent or not
             else {
                 //$('#processStart').removeAttr('disabled');
                 //$('#progress').progressbar('option', 'value', 0);
                 //$('#progress').progressbar('option', 'disabled', true);
                 //re-enable start button and destroy progressbar
                  $('#processStart').progressbar("destroy");
-                 $('#processStart').css({'height': '80px'});
+                 $('#processStart').css({'background-color': 'transparent'});
                  $('#processStart a').show();
-                 $('#processStart').prop('disabled', false);
+                 $('#processStart a').text("Completed");
                  
                  $('.detailMonitorTopData:eq(3)').text("Completed");
                  $('#solverOutput').append("OUT: " + "results sent" + "\n");
+                 
             }
         });
     }
