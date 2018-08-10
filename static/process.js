@@ -61,7 +61,7 @@
                         $('#processStart').progressbar('option', 'value', data.percent);
                         
                         $('#processStart > div').css({
-                            'background-color': '#2e86de'
+                            'background': '#d63031'
                             //'background': 'linear-gradient(green, blue)'
                         });
                         
@@ -132,9 +132,10 @@
                  $('#processStart').progressbar("destroy");
                  $('#processStart a').css({'color': '#2e86deff'});
                  $('#processStart a').show();
-                 $('#processStart').css({'background-color': '#7ed6df'});
+                 $('#processStart').css({'background-color': '#55efc4'});
+                 $('#processStart').css({'height': '80px'});
                  $('#processStart a').css({'color': 'white'});
-                 $('#processStart a').text("Completed"); 
+                 $('#processStart a').text("Completed");
                  
                  $('.detailMonitorTopData:eq(3)').text("Completed");
                  $('#solverOutput').append("OUT: " + "results sent" + "\n");

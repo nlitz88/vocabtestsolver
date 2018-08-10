@@ -332,6 +332,7 @@ class list_solver(Thread):
                 
                 browser = restart_session(browser, self.link)
                 
+                #temporary until list saving added
                 break
                 
             
