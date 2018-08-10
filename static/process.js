@@ -130,11 +130,11 @@
                 //$('#progress').progressbar('option', 'disabled', true);
                 //re-enable start button and destroy progressbar
                  $('#processStart').progressbar("destroy");
-                 $('#processStart').css({'background-color': '#e67e22'});
-                 $('#processStart a').css({'color': '#e67e22'});
+                 $('#processStart a').css({'color': '#2e86deff'});
                  $('#processStart a').show();
+                 $('#processStart').css({'background-color': '#7ed6df'});
                  $('#processStart a').css({'color': 'white'});
-                 $('#processStart a').text("Completed");
+                 $('#processStart a').text("Completed"); 
                  
                  $('.detailMonitorTopData:eq(3)').text("Completed");
                  $('#solverOutput').append("OUT: " + "results sent" + "\n");

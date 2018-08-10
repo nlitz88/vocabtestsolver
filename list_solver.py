@@ -78,13 +78,6 @@ class list_solver(Thread):
         # CREATE HEALDESS CHROME INSTANCE
         #   - use browser from instance in usable format
         browser = self.browser
-
-
-        #options = ChromeOptions()
-        #options.add_argument("--headless")
-        #options.add_experimental_option("detach", True)
-        #browser = webdriver.Chrome(chrome_options=options)
-        #browser = webdriver.Chrome()
         
         
         
@@ -178,6 +171,7 @@ class list_solver(Thread):
             return self.browser
             
         
+
         
         # BEGINNING OF SOLVER DEPENDENT FUNCTIONS
         #   - Made dynamic per browser, page, etc.
@@ -224,15 +218,10 @@ class list_solver(Thread):
                 return definitions
             else:
                 return False
-
-
-
-
-        # BEGINNING OF VALIDATION PROCESSES
-        #   - if invalid, wait until killed.
-        #   - if valid, move on.
     
 
+    
+    
         # NAVIGATE TO LIST
         browser.get(self.link)
         elimCSS(browser)    #decreases loadingtimes
@@ -244,12 +233,11 @@ class list_solver(Thread):
         
         # BEGINNING OF PROCESS (LEARNING LIST)
         #   - put into TRY / EXCEPT format to handle errors
-        
-        
-        self.currentOperation = "learning list"
 
         
         while(len(self.word_list) < self.list_length):
+            
+            self.currentOperation = "learning list"
             
             print("Iterations: " + str(self.iterations))
             print("Browser: " + str(browser))
@@ -264,6 +252,7 @@ class list_solver(Thread):
                 self.currentCommand = "Reloading page, elements failed to load"
                 
                 browser = restart_session(browser, self.link)
+                elimCSS(browser)
                 self.iterations = 1
                 
                 continue
@@ -294,10 +283,6 @@ class list_solver(Thread):
             
             self.iterations += 1
             self.completedWords = len(self.word_list)
-                  
-                    
-                    
-        #print("List Learning Completed!")   #debugging
         
         
         
