@@ -61,7 +61,7 @@
                         $('#processStart').progressbar('option', 'value', data.percent);
                         
                         $('#processStart > div').css({
-                            'background': '#d63031'
+                            'background': '#55efc4'
                             //'background': 'linear-gradient(green, blue)'
                         });
                         
@@ -142,33 +142,6 @@
                  
             }
         });
-    }
- 
-    
-    function check_link() {
-        console.log("this function will report if link is valid by calling function in list_solver or elsewhere to see if link is valid");
-    }
-
-    function check_login() {
-        console.log("this function will report back whether or not the entered credentials are valid");
-        /*if returns false, show outputfield to view error message
-        may have to rely on alternate dummy object. EITHER THAT or the process_progress/process_start waits to initialize other functionality
-        until these functions return true*/
-    }
-
-
-    function alert_test(percent) {
-        
-        $('#processStart').click(function() {
-            $('#processStart a').hide();
-            $('#processStart').progressbar({value: 30});
-            /*$('#leftBlock').css({
-                'background-image': 'url(../resources/images/POtJ.gif)',
-                //'background-color': 'green'
-            }); */
-            
-            
-        })
     }
 
 
