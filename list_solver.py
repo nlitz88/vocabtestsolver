@@ -320,11 +320,11 @@ class list_solver(Thread):
         # BEGINNING OF PORCESS (SOLVING LIST)
         self.currentOperation = "solving list"
         
-        x = 0
-        while x < self.list_length:
+        i = 0
+        while i < self.list_length:
             
             print("Iterations: " + str(self.iterations))
-            print("X: " + str(x))
+            print("X: " + str(i))
             try:
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
                 definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
@@ -333,7 +333,7 @@ class list_solver(Thread):
             except:
                 # step loop maximum up
                 # reset iterations for finding qnabody
-                x -= 1
+                i -= 1
                 self.iterations = 1
                 # report error
                 print_message("Elements not loaded, reloading page")
@@ -358,7 +358,8 @@ class list_solver(Thread):
                     #print("Definition matched at button " + choiceList[x])
                     self.currentCommand = vocabWord.text + ": definition matched at button " + choiceList[x]
             
-            x += 1
+            i += 1
+            print("X added 1")
             self.iterations += 1
             self.completedWords += 1
         
