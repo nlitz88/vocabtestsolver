@@ -248,7 +248,6 @@ class list_solver(Thread):
             self.currentOperation = "learning list"
             
             print("Iterations: " + str(self.iterations))
-            print("Browser: " + str(browser))
             try:
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
                 definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
@@ -321,17 +320,18 @@ class list_solver(Thread):
         # BEGINNING OF PORCESS (SOLVING LIST)
         self.currentOperation = "solving list"
         
-        
-        for x in range(self.list_length):
+        x = 0
+        while x < self.list_length:
             
-            #print_message(str(browser))
+            print("Iterations: " + str(self.iterations))
+            print("X: " + str(x))
             try:
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
                 definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
                 answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
                 #print(vocabWord.text)   #debugging
             except:
-                # step for loop back 1
+                # step loop maximum up
                 # reset iterations for finding qnabody
                 x -= 1
                 self.iterations = 1
@@ -340,7 +340,9 @@ class list_solver(Thread):
                 self.currentCommand = "Reloading page, elements failed to load"
                 #browser = restart_session(browser, self.link)
                 save_list(browser)
+                print_message("list saved")
                 browser.refresh()
+                print_message("browser refreshed")
                 #elimCSS()
                 continue
                 
@@ -354,8 +356,9 @@ class list_solver(Thread):
                 if definition.text == self.correctDefinition:
                     answerButtons[x].click()
                     #print("Definition matched at button " + choiceList[x])
-                    self.currentCommand = vocabWord.text + ": definition matched at button " + str(x)
-                    
+                    self.currentCommand = vocabWord.text + ": definition matched at button " + choiceList[x]
+            
+            x += 1
             self.iterations += 1
             self.completedWords += 1
         
