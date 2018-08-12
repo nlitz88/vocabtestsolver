@@ -147,6 +147,9 @@ class list_solver(Thread):
             sendBtn = browser.find_element_by_xpath('//*[@id="contentHolder"]/form/div[2]/input[5]')
             sendBtn.click()
             print("sending results complete")
+        
+        def view_results(browser):
+            pass
 
             
         def print_message(message):
@@ -189,7 +192,12 @@ class list_solver(Thread):
                     return True     #if true, duplicate present
             return False
         
-        
+
+        def save_list(browser):
+            saveButton = browser.find_element_by_id('saveButton')
+            saveButton.click()
+
+
         def word_loaded(browser):
             elem = browser.find_element_by_id("qnaBody-" + str(self.iterations))
             if elem:
@@ -251,8 +259,9 @@ class list_solver(Thread):
                 print_message("Elements not loaded, reloading page")
                 self.currentCommand = "Reloading page, elements failed to load"
                 
-                browser = restart_session(browser, self.link)
-                elimCSS(browser)
+                #browser = restart_session(browser, self.link)
+                browser.refresh()
+                #elimCSS(browser)
                 self.iterations = 1
                 
                 continue
@@ -322,18 +331,18 @@ class list_solver(Thread):
                 answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
                 #print(vocabWord.text)   #debugging
             except:
+                # step for loop back 1
+                # reset iterations for finding qnabody
                 x -= 1
-                
-                # SAVING LIST CAPABILITY NEEDS TO BE ADDED
-                # IF NOT, RESTART SOLVING LIST
-                
+                self.iterations = 1
+                # report error
                 print_message("Elements not loaded, reloading page")
                 self.currentCommand = "Reloading page, elements failed to load"
-                
-                browser = restart_session(browser, self.link)
-                
-                #temporary until list saving added
-                break
+                #browser = restart_session(browser, self.link)
+                save_list(browser)
+                browser.refresh()
+                #elimCSS()
+                continue
                 
             
             for word in self.word_list:
