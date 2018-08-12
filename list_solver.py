@@ -209,8 +209,10 @@ class list_solver(Thread):
             elem = browser.find_element_by_id("qnaBody-" + str(self.iterations))
             if elem:
                 if self.listType == "sentences":
-                    sentence = elem.find_element_by_xpath('//*[@id="qnaBody-' + str(self.iterations) + ']/div[1]/div[1]/text()[1]')
+                    sentence = elem.find_element_by_xpath('//*[@id="qnaBody-' + str(self.iterations) + '"]/div[1]/div[1]/text()[1]')
+                    print(sentence)
                     return sentence
+                print("trying to find word?")
                 word = elem.find_element_by_class_name('question')
                 word = word.find_element_by_tag_name('b')
                 return word
@@ -253,7 +255,7 @@ class list_solver(Thread):
         # BEGINNING OF PROCESS (LEARNING LIST)
         #   - put into TRY / EXCEPT format to handle errors
 
-        
+        print(self.listType)
         while(len(self.word_list) < self.list_length):
             
             self.currentOperation = "learning list"
