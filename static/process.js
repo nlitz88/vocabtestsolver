@@ -131,8 +131,8 @@
                 //re-enable start button and destroy progressbar
                  $('#processStart').progressbar("destroy");
                  $('#processStart a').css({'color': '#2e86deff'});
-                 $('#processStart a').show();
                  $('#processStart').css({'background-color': '#55efc4'});
+                 $('#processStart a').show();
                  $('#processStart').css({'height': '80px'});
                  $('#processStart a').css({'color': 'white'});
                  $('#processStart a').text("Completed");

@@ -46,6 +46,7 @@ class list_solver(Thread):
         self.ellapsedTime = 0
         self.initTime = time.time() #time of initialization
         self.loggedIn = None
+        self.listType = ""
 
         """
         chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
@@ -93,6 +94,12 @@ class list_solver(Thread):
             num, length = length.split('/')
             self.list_length = int(length)
         
+        def get_list_type(browser):
+            
+            url = browser.current_url
+            if "sentences" in url:
+                self.listType = "sentences"
+
 
         def login(browser, usr, pswd):
             
@@ -201,6 +208,9 @@ class list_solver(Thread):
         def word_loaded(browser):
             elem = browser.find_element_by_id("qnaBody-" + str(self.iterations))
             if elem:
+                if self.listType == "sentences":
+                    sentence = elem.find_element_by_xpath('//*[@id="qnaBody-' + str(self.iterations) + ']/div[1]/div[1]/text()[1]')
+                    return sentence
                 word = elem.find_element_by_class_name('question')
                 word = word.find_element_by_tag_name('b')
                 return word
@@ -234,6 +244,7 @@ class list_solver(Thread):
         browser.get(self.link)
         elimCSS(browser)    #decreases loadingtimes
         get_list_length(browser)
+        get_list_type(browser)
         #print(self.list_length)
         
 
