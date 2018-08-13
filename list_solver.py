@@ -48,6 +48,8 @@ class list_solver(Thread):
         self.loggedIn = None
         self.listType = ""
 
+        self.debugging_enabled = False
+
         """
         chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
         opts = ChromeOptions()
@@ -56,8 +58,8 @@ class list_solver(Thread):
         """
 
         options = ChromeOptions()
-        options.add_argument("--headless")
-        #options.add_experimental_option("detach", True)
+        #options.add_argument("--headless")
+        options.add_experimental_option("detach", True)
         self.browser = webdriver.Chrome(chrome_options=options)
         
         Thread.__init__(self)
@@ -155,19 +157,28 @@ class list_solver(Thread):
             sendBtn.click()
             print("sending results complete")
         
+
+        def save_list(browser):
+            saveButton = browser.find_element_by_id('saveButton')
+            saveButton.click()
+
+
         def view_results(browser):
-            pass
+            pass # add ability to go to completed lists
 
             
         def print_message(message):
             linkDetail = self.link.split('?')
             
-            print('')
-            print("INSTANCE: " + self.username + " | " + self.email + " | " + linkDetail[1])
-            print("MESSAGE: " + message)
-            print('')        
+            if self.debugging_enabled:
+                print('')
+                print("INSTANCE: " + self.username + " | " + self.email + " | " + linkDetail[1])
+                print("MESSAGE: " + message)
+                print('')
+            else:
+                pass     
         
-        
+        '''
         def restart_session(browser, url):
             print("previous browser: " + str(browser))
             browser.quit()
@@ -179,7 +190,7 @@ class list_solver(Thread):
             print("new browser: " + str(self.browser))
             self.browser.get(url)
             return self.browser
-            
+        '''
         
 
         
@@ -198,21 +209,15 @@ class list_solver(Thread):
                 if words == word:
                     return True     #if true, duplicate present
             return False
-        
-
-        def save_list(browser):
-            saveButton = browser.find_element_by_id('saveButton')
-            saveButton.click()
 
 
         def word_loaded(browser):
             elem = browser.find_element_by_id("qnaBody-" + str(self.iterations))
             if elem:
                 if self.listType == "sentences":
-                    sentence = elem.find_element_by_xpath('//*[@id="qnaBody-' + str(self.iterations) + '"]/div[1]/div[1]/text()[1]')
-                    print(sentence)
-                    return sentence
-                print("trying to find word?")
+                    question = elem.find_element_by_class_name('question')
+                    return question
+
                 word = elem.find_element_by_class_name('question')
                 word = word.find_element_by_tag_name('b')
                 return word
@@ -259,8 +264,8 @@ class list_solver(Thread):
         while(len(self.word_list) < self.list_length):
             
             self.currentOperation = "learning list"
+            print_message("Iterations: " + str(self.iterations))
             
-            print("Iterations: " + str(self.iterations))
             try:
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
                 definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
@@ -271,9 +276,9 @@ class list_solver(Thread):
                 print_message("Elements not loaded, reloading page")
                 self.currentCommand = "Reloading page, elements failed to load"
                 
-                #browser = restart_session(browser, self.link)
                 browser.refresh()
-                #elimCSS(browser)
+                elimCSS(browser)
+
                 self.iterations = 1
                 
                 continue
@@ -331,13 +336,13 @@ class list_solver(Thread):
         
         
         # BEGINNING OF PORCESS (SOLVING LIST)
-        self.currentOperation = "solving list"
         
         i = 0
         while i < self.list_length:
             
-            print("Iterations: " + str(self.iterations))
-            print("X: " + str(i))
+            self.currentOperation = "solving list"
+            print_message("Iterations: " + str(self.iterations) + " | Loop: " + str(i))
+
             try:
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
                 definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
@@ -353,10 +358,9 @@ class list_solver(Thread):
                 self.currentCommand = "Reloading page, elements failed to load"
                 #browser = restart_session(browser, self.link)
                 save_list(browser)
-                print_message("list saved")
                 browser.refresh()
-                print_message("browser refreshed")
-                #elimCSS()
+                elimCSS()
+
                 continue
                 
             
@@ -371,8 +375,8 @@ class list_solver(Thread):
                     #print("Definition matched at button " + choiceList[x])
                     self.currentCommand = vocabWord.text + ": definition matched at button " + choiceList[x]
             
+
             i += 1
-            print("X added 1")
             self.iterations += 1
             self.completedWords += 1
         
@@ -382,6 +386,7 @@ class list_solver(Thread):
         # INSERT EMAIL TEACHER FUNCTION
         # If doesn't load, go to account and send details manually.
         # consider sending from account permanently rather than waiting on fetch
+        # navigate to view results, send results
         send_results(browser, self.email)
         
         
