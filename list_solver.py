@@ -74,7 +74,8 @@ class list_solver(Thread):
         choiceList = ['a', 'b', 'c', 'd', 'e']  # CORRESPONDING SENDABLE KEY VALUES
         timeThreshold = 20  # Wating threshold for WebDriverWait
         loginLink = 'https://www.vocabtest.com/login.php'
-        
+        accountLink = 'https://www.vocabtest.com/user.php'
+
         
         
 
@@ -99,8 +100,12 @@ class list_solver(Thread):
         def get_list_type(browser):
             
             url = browser.current_url
-            if "sentences" in url:
-                self.listType = "sentences"
+
+            acceptedLists = ["definitions", "sentences", "reverseDefinitions", "reverseSentences", "synonyms", "reverseSynonyms", "antonyms", "reverseAntonyms"]
+            for types in acceptedLists:
+                if types in url:
+                    self.listType = types
+                    break
 
 
         def login(browser, usr, pswd):
@@ -130,7 +135,6 @@ class list_solver(Thread):
                 loggedIn = WebDriverWait(browser, 6).until(destination_valid)
                 return True
             except:
-                print("login not successful for "  + usr)
                 return False
                 
                          
@@ -155,7 +159,6 @@ class list_solver(Thread):
             
             sendBtn = browser.find_element_by_xpath('//*[@id="contentHolder"]/form/div[2]/input[5]')
             sendBtn.click()
-            print("sending results complete")
         
 
         def save_list(browser):
@@ -164,7 +167,18 @@ class list_solver(Thread):
 
 
         def view_results(browser):
-            pass # add ability to go to completed lists
+            
+            completedLists = browser.find_element_by_xpath('//*[@id="contentHolder"]/div/div[1]')
+
+            completedListLinks = completedLists.find_elements_by_tag_name('a')
+
+            completedListNames = completedLists.find_elements_by_tag_name('sup')
+            completedListNames = completedListNames.find_elements_by_tag_name('b')
+
+            for x, name in enumerate(completedListNames):
+                if name.text == self.listType:
+                    if completedListLinks[x].text == "View Results":
+                        completedListLinks[x].click()
 
             
         def print_message(message):
@@ -383,11 +397,10 @@ class list_solver(Thread):
         
         
         # INSERT EMAIL TEACHER FUNCTION
-        # If doesn't load, go to account and send details manually.
-        # consider sending from account permanently rather than waiting on fetch
-        # navigate to view results, send results
-        send_results(browser, self.email)
         
+        browser.get(accountLink)
+        view_results(browser)
+        send_results(browser, self.email)
         
         # BEGINNING OF CONCLUDING FUNCTIONS.
         self.currentOperation = "list completed"

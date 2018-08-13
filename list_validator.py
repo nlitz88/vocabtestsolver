@@ -54,11 +54,21 @@ class list_validator(Thread):
 
         def check_list(browser):
             # ADD TRY EXCEPT: on except, return false
-
+            acceptedLists = ["definitions", "sentences", "reverseDefinitions", "reverseSentences", "synonyms", "reverseSynonyms", "antonyms", "reverseAntonyms"]
+            
             def destination_valid(browser):
                 indicator = browser.find_element_by_id('questionNum')
                 if indicator:
-                    return True
+                    # eheck for supported list type
+                    supported = False
+                    url = browser.current_url
+                    for types in acceptedLists:
+                        if types in url:
+                            print("indicator found, accepted type " + types)
+                            supported = True
+                            break
+                    return supported
+
                 else:
                     return False
             
