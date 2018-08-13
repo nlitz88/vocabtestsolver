@@ -58,8 +58,8 @@ class list_solver(Thread):
         """
 
         options = ChromeOptions()
-        #options.add_argument("--headless")
-        options.add_experimental_option("detach", True)
+        options.add_argument("--headless")
+        #options.add_experimental_option("detach", True)
         self.browser = webdriver.Chrome(chrome_options=options)
         
         Thread.__init__(self)
