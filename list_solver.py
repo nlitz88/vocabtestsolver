@@ -260,7 +260,6 @@ class list_solver(Thread):
         # BEGINNING OF PROCESS (LEARNING LIST)
         #   - put into TRY / EXCEPT format to handle errors
 
-        print(self.listType)
         while(len(self.word_list) < self.list_length):
             
             self.currentOperation = "learning list"
