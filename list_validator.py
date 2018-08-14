@@ -64,7 +64,7 @@ class list_validator(Thread):
                     url = browser.current_url
                     for types in acceptedLists:
                         if types in url:
-                            print("indicator found, accepted type " + types)
+                            #print("indicator found, accepted type " + types)
                             supported = True
                             break
                     return supported

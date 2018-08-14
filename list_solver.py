@@ -58,7 +58,7 @@ class list_solver(Thread):
         """
 
         options = ChromeOptions()
-        options.add_argument("--headless")
+        #options.add_argument("--headless")
         #options.add_experimental_option("detach", True)
         self.browser = webdriver.Chrome(chrome_options=options)
         
@@ -74,7 +74,7 @@ class list_solver(Thread):
         choiceList = ['a', 'b', 'c', 'd', 'e']  # CORRESPONDING SENDABLE KEY VALUES
         timeThreshold = 20  # Wating threshold for WebDriverWait
         loginLink = 'https://www.vocabtest.com/login.php'
-        accountLink = 'https://www.vocabtest.com/user.php'
+        accountLink = 'https://www.vocabtest.com/user_tests_completed.php'
 
         
         
@@ -82,8 +82,9 @@ class list_solver(Thread):
         # CREATE HEALDESS CHROME INSTANCE
         #   - use browser from instance in usable format
         browser = self.browser
+        browser.implicitly_wait(10)
         
-        
+
         
         
         # BEGINNING OF PROCESS-SPEICIFIC ALTERNATE FUNCTIONALITY FUNCTIONS
@@ -97,6 +98,8 @@ class list_solver(Thread):
             num, length = length.split('/')
             self.list_length = int(length)
         
+
+        # could be imported from list_validator; this was quick solution
         def get_list_type(browser):
             
             url = browser.current_url
@@ -137,9 +140,28 @@ class list_solver(Thread):
             except:
                 return False
                 
+        def login_status(browser):
+
+            def destination_valid(browser):
+                indicator = browser.find_element_by_xpath('//*[@id="header"]/tbody/tr/td[3]/a[2]')
+                if indicator.text == 'Log Out':
+                    #print('creds valid')
+                    return True
+                else:
+                    #print('creds invalid')
+                    return False
+
+            try:
+                loggedIn = WebDriverWait(browser, 5).until(destination_valid)
+            except:
+                loggedIn = False
+            
+            return loggedIn
+
                          
         def send_results(browser, email):
             
+            #webdriverwait not needed due to implicit wait; being reused
             def email_loaded(browser):
                 elem = browser.find_element_by_xpath('//*[@id="emailTo"]')
                 if elem:
@@ -166,19 +188,30 @@ class list_solver(Thread):
             saveButton.click()
 
 
+        # Loads completed tests page, but also checks to ensure that correct list is sent
         def view_results(browser):
             
             completedLists = browser.find_element_by_xpath('//*[@id="contentHolder"]/div/div[1]')
-
             completedListLinks = completedLists.find_elements_by_tag_name('a')
-
             completedListNames = completedLists.find_elements_by_tag_name('sup')
-            completedListNames = completedListNames.find_elements_by_tag_name('b')
 
-            for x, name in enumerate(completedListNames):
-                if name.text == self.listType:
+            for x, names in enumerate(completedListNames):
+                #mess of text formatting for indentifying list names. Alternate solutions should be explored
+                nameArr = names.text.split(' -- ')
+                name = list(nameArr[0])
+                name[0] = name[0].lower()
+                if " " in name:
+                    name[name.index(" ")] = ""
+                name = "".join(name)
+                if name == self.listType:
+                    # steps 3 to find respective link
+                    if x == 0:
+                        linkIndex = 0
+                    else:
+                        linkIndex = x + 3
                     if completedListLinks[x].text == "View Results":
                         completedListLinks[x].click()
+                        break
 
             
         def print_message(message):
@@ -277,7 +310,7 @@ class list_solver(Thread):
         while(len(self.word_list) < self.list_length):
             
             self.currentOperation = "learning list"
-            print_message("Iterations: " + str(self.iterations))
+            #print_message("Iterations: " + str(self.iterations))
             
             try:
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
@@ -354,7 +387,7 @@ class list_solver(Thread):
         while i < self.list_length:
             
             self.currentOperation = "solving list"
-            print_message("Iterations: " + str(self.iterations) + " | Loop: " + str(i))
+            #print_message("Iterations: " + str(self.iterations) + " | Loop: " + str(i))
 
             try:
                 vocabWord = WebDriverWait(browser, timeThreshold).until(word_loaded)
@@ -372,7 +405,7 @@ class list_solver(Thread):
                 #browser = restart_session(browser, self.link)
                 save_list(browser)
                 browser.refresh()
-                elimCSS()
+                elimCSS(browser)
 
                 continue
                 
@@ -398,7 +431,18 @@ class list_solver(Thread):
         
         # INSERT EMAIL TEACHER FUNCTION
         
+        time.sleep(2)       #lazy wait for the page to fetch the reults. Should replace with
+
         browser.get(accountLink)
+        print_message(browser.current_url)
+
+        # redundant but functional
+        if not login_status(browser):
+            print_message("Not logged in, logging in again")
+            self.loggedIn = login(browser, self.username, self.password)
+            while not self.loggedIn:
+                loggedIn = login(browser, self.username, self.password)
+
         view_results(browser)
         send_results(browser, self.email)
         
