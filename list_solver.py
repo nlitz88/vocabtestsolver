@@ -15,17 +15,10 @@ import os
 class list_solver(Thread):
 
     
-    
-    
-    
-    
-    
     # FOLLOWING FUNCTIONS ENCLOSED CAN BE MIGRATED TO PARENT CLASS IN FUTURE IF NEED BE
     # THIS CLASS (WHICH IS A SPECIFIC FUNCTION) can inherit the parent class.
     # it would inherit init, percent done, etc.
     # only NEEDED if additional functionality on the website was added (splitting up learning and solving)
-    
-    
 
     
     def __init__(self, link, username, password, email):
@@ -51,14 +44,12 @@ class list_solver(Thread):
         self.debugging_enabled = False
 
         """
-        chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
-        opts = ChromeOptions()
         opts.binary_location = chrome_bin
         self.browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=opts)
         """
 
         options = ChromeOptions()
-        #options.add_argument("--headless")
+        options.add_argument("--headless")
         #options.add_experimental_option("detach", True)
         self.browser = webdriver.Chrome(chrome_options=options)
         
@@ -76,10 +67,8 @@ class list_solver(Thread):
         loginLink = 'https://www.vocabtest.com/login.php'
         accountLink = 'https://www.vocabtest.com/user_tests_completed.php'
 
-        
-        
 
-        # CREATE HEALDESS CHROME INSTANCE
+        # CEATE REFERENCE TO CHROME INSTANCE
         #   - use browser from instance in usable format
         browser = self.browser
         browser.implicitly_wait(10)
@@ -87,8 +76,7 @@ class list_solver(Thread):
 
         
         
-        # BEGINNING OF PROCESS-SPEICIFIC ALTERNATE FUNCTIONALITY FUNCTIONS
-        # INCLUDED: SEND RESULTS ...
+        # BEGINNING EXTERNAL LEARNING/SOLVING FUNCTIONS
         
         def get_list_length(browser):
             
@@ -140,6 +128,7 @@ class list_solver(Thread):
             except:
                 return False
                 
+
         def login_status(browser):
 
             def destination_valid(browser):
@@ -196,24 +185,31 @@ class list_solver(Thread):
             completedListNames = completedLists.find_elements_by_tag_name('sup')
 
             for x, names in enumerate(completedListNames):
-                #mess of text formatting for indentifying list names. Alternate solutions should be explored
+
                 nameArr = names.text.split(' -- ')
                 name = list(nameArr[0])
                 name[0] = name[0].lower()
                 if " " in name:
                     name[name.index(" ")] = ""
                 name = "".join(name)
+
                 if name == self.listType:
                     # steps 3 to find respective link
                     if x == 0:
                         linkIndex = 0
                     else:
                         linkIndex = x + 3
+
                     if completedListLinks[x].text == "View Results":
                         completedListLinks[x].click()
                         break
 
-            
+    
+        def elimCSS(browser):
+            page = browser.find_element_by_tag_name('body')
+            browser.execute_script("document.head.parentNode.removeChild(document.head);", page)
+
+
         def print_message(message):
             linkDetail = self.link.split('?')
             
@@ -226,6 +222,8 @@ class list_solver(Thread):
                 pass     
         
         '''
+        ONLY USE IF BROWSER HAS FAILED X AMOUNT OF TIMES. ADD FAILCOUNT
+        IN CASE DRIVER BECOMES ABSOLUTELY UNRESPONSIVE
         def restart_session(browser, url):
             print("previous browser: " + str(browser))
             browser.quit()
@@ -244,12 +242,6 @@ class list_solver(Thread):
         # BEGINNING OF SOLVER DEPENDENT FUNCTIONS
         #   - Made dynamic per browser, page, etc.
         #   - Potentially make this independent class, have "process" class extend this
-
-
-        def elimCSS(browser):
-            page = browser.find_element_by_tag_name('body')
-            browser.execute_script("document.head.parentNode.removeChild(document.head);", page)
-        
             
         def is_duplicate(word):
             for words in self.word_list:
@@ -291,6 +283,20 @@ class list_solver(Thread):
             else:
                 return False
     
+        
+        # FINDS RESPECTIVE DEFINITION TO CURRENT WORD AND CLICKS RESPECTIVE ANSWERBUTTON
+        def match_definition(vocabWord, definitions, answerButtons):
+
+            for word in self.word_list:
+                if word == vocabWord.text:
+                    self.correctDefinition = self.word_list[word]
+                    #print(self.correctDefinition)    #debugging
+                    
+            for x, definition in enumerate(definitions):
+                if definition.text == self.correctDefinition:
+                    answerButtons[x].click()
+                    #print("Definition matched at button " + choiceList[x])
+                    self.currentCommand = vocabWord.text + ": definition matched at button " + choiceList[x]
 
     
     
@@ -317,8 +323,7 @@ class list_solver(Thread):
                 definitions = WebDriverWait(browser, timeThreshold).until(definitions_loaded)
                 answerButtons = WebDriverWait(browser, timeThreshold).until(answerButtons_loaded)
             except:
-                # ESSENTIAL TO ENSURE THAT PROCESS DOESN'T GET HUNG UP ON WAITING FOR ELEMENT ON PAGE
-                # REFRESH IN ORDER TO HAVE ELEMENTES LOAD AGAIN
+                # REFRESH PAGE IN ORDER TO RELOAD UNRESPONSIVE ELEMENTS
                 print_message("Elements not loaded, reloading page")
                 self.currentCommand = "Reloading page, elements failed to load"
                 
@@ -326,11 +331,14 @@ class list_solver(Thread):
                 elimCSS(browser)
 
                 self.iterations = 1
-                
                 continue
-            
-            #print('')
-            #print(vocabWord.text + " updated: " + " qnaBODY " + str(self.iterations))   #debugging
+
+
+            # IF WORD IS KNOWN, ANSWER QUESTIONS CORRECTLY TO SAVE TIME
+            if is_duplicate(vocabWord.text):
+                match_definition(vocabWord, definitions, answerButtons)
+                self.currentCommand = (vocabWord.text).upper() + ": duplicate, already found"
+
             
             found = False
             for x, button in enumerate(answerButtons):
@@ -340,14 +348,8 @@ class list_solver(Thread):
                 
                 if button.text == '✓':
                     self.correctDefinition = definitions[x].text
-                    
-                    if(is_duplicate(vocabWord.text)):
-                        #print("!!Duplicate Word!!") #debugging
-                        self.currentCommand = (vocabWord.text).upper() + ": duplicate, already found"
-                    
-                    else:
-                        self.word_list[vocabWord.text] = self.correctDefinition
-                        self.currentCommand = (vocabWord.text).upper() + ": " + self.correctDefinition
+                    self.word_list[vocabWord.text] = self.correctDefinition
+                    self.currentCommand = (vocabWord.text).upper() + ": " + self.correctDefinition
                     
                     break
                     
@@ -410,16 +412,7 @@ class list_solver(Thread):
                 continue
                 
             
-            for word in self.word_list:
-                if word == vocabWord.text:
-                    self.correctDefinition = self.word_list[word]
-                    #print(self.correctDefinition)    #debugging
-                    
-            for x, definition in enumerate(definitions):
-                if definition.text == self.correctDefinition:
-                    answerButtons[x].click()
-                    #print("Definition matched at button " + choiceList[x])
-                    self.currentCommand = vocabWord.text + ": definition matched at button " + choiceList[x]
+            match_definition(vocabWord, definitions, answerButtons)
             
 
             i += 1
@@ -445,6 +438,7 @@ class list_solver(Thread):
 
         view_results(browser)
         send_results(browser, self.email)
+        
         
         # BEGINNING OF CONCLUDING FUNCTIONS.
         self.currentOperation = "list completed"
