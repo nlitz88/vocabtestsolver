@@ -41,7 +41,7 @@ body {
   padding: 0;
   float: right;
   height: 100%;
-  width: 500px;
+  width: 336px;
   background-color: transparent;
 }
 
@@ -51,7 +51,7 @@ body {
   background-color: transparent;
   color: #576574;
   height: 80px;
-  width: calc(100% / 3);
+  width: calc(100% / 2);
   text-align: center;
   line-height: calc(40px + 30px) /*Half of navBar + 30px of text-size*/
 }

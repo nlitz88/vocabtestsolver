@@ -1,7 +1,7 @@
 //function process() {
     
     function process_start() {
-        console.log("process_start function waiting for click");
+        //console.log("process_start function waiting for click");
         
         $('#processStart').click(function() {
             
@@ -66,7 +66,7 @@
                         });
                         
                         setTimeout(function() {
-                            console.log("process_progress called from start process"); //debugging
+                            //console.log("process_progress called from start process"); //debugging
                             process_progress(data.key); //uses key from json object returned from _start_process
                         }, 100);
                         
@@ -150,7 +150,7 @@
         //$('#processStart').progressbar({'disabled': true});
         //console.log("assigned progress bar")
         process_start();
-        console.log('start_process called...waiting for initiation...');
+        //console.log('start_process called...waiting for initiation...');
         
         $('#detailButton').hide();
         $('#detailMonitor').hide();
