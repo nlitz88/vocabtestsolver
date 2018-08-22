@@ -31,7 +31,7 @@ body {
   line-height: calc(40px + 30px);
 }
 
-#logoField p {
+#logoField p a {
   color: #576574;
 }
 
@@ -45,7 +45,7 @@ body {
   background-color: transparent;
 }
 
-#navigation ul li {
+#navigation ul li a {
   display: block;
   float: left;
   background-color: transparent;
@@ -239,10 +239,40 @@ body {
     color: #576574;
 }
 
+.answer {
+    font-family: Arial;
+    transition: 0.3s;
+}
 
+#emailInput {
+    height: 200px;
+    width: 100%;
+    margin-top: 4px;
+    margin-bottom:8px;
+    border-radius: 8px;
+    font-family: consolas;
+    font-size: 14px;
+    padding: 4px;
+    transition: 0.3s;
+    resize: none;
+}
 
+#emailSend {
+    border-style: none;
+    height: 40px;
+    width: 100%;
+    border-radius: 4px;
+    padding: 0;
+    margin-top: 8px;
+    background-color: #2e86deff;
+    font-family: "Titan One";
+}
 
+#emailSend a {
+    color: white;
+}
 
-
-
-
+#emailSend:hover {
+    background-color: #49aefdff;
+    transition: 0.3s;
+}

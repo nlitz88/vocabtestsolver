@@ -25,6 +25,20 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+
 @app.route('/_validate')
 def _validate():
 
@@ -66,7 +80,7 @@ def _start_process():
     
     # report new instance
     print('')
-    print("NEW INSTANCE: " + key)
+    print("NEW INSTANCE: " + key + " from " + str(request.remote_addr))
     linkDetail = list_link.split('?')
     print(username + " | " + email + " | " + linkDetail[1])
     print("Active Instances: " + str(len(threaded_processes)))

@@ -1,0 +1,111 @@
+<!Doctype html>
+
+
+
+<html>
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="../static/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Fredoka+One|Titan+One" rel="stylesheet">
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    </head>
+
+    <body>
+        {% include 'elements/navigation.html' ignore missing %}
+        <div id="bodyContainer">
+      
+                <div id="leftBlock">
+                </div>
+              
+                <div id="mainBlock">
+                    <div id="introField">
+                        <p>Frequently asked questions</p>
+                    </div>
+                    
+
+                    <div class="question">
+                        <p><a href="#">Why won't my link work?</a></p>
+                    </div>
+                    <div class="answer">
+                        <p>Acceptable links must be in the following form: </p>
+                        <img src="../static/images/img1.png">
+                        <p>
+                            The notable component of the link is the very end: "definitions.php..."
+                            as this directs the bot to the actual testing interface, which will look something like this
+                        </p>
+                        <img src="../static/images/img2.png" style = height:200px;>
+                    </div>
+                    
+
+                    <div class="question">
+                        <p>Error message that my credentials are invalid</p>
+                    </div>
+                    <div class="answer">
+                        <p>Ensure that you are entering your vocabtest.com credentials and that your account is currently active</p>
+                    </div>
+
+
+                    <div class="question">
+                        <p>Why has the process slowed down?</p>
+                    </div>
+                    <div class="answer">
+                        <p>When the learning process reaches its peak, each iteration takes longer.</p>
+                    </div>
+
+
+                    <div class="question">
+                        <p>The process has stopped completely</p>
+                    </div>
+                    <div class="answer">
+                        <p>
+                            Potential reasons for process stopping:
+                            <br>
+                            <br>
+                            1.) The webserver has been shut down.
+                            <br>
+                            2.) The host machine has run out of resources and can no longer serve the webserver
+                            <br>
+                            3.) Probably some issue that I didn't get to in time ¯\_(ツ)_/¯
+                            <br>
+                            <br>
+                            Please feel free to contact me if any of these issues persist; I will do my best to address them, time permitting.
+                        </p>
+                    </div>
+                    
+
+                </div>
+              
+                <div id="rightBlock">
+                </div>
+
+        </div>
+    </body>
+
+    <script>
+        $(function() {
+
+            //$('.answer').css({'height':'0'});
+            $('.answer').hide();
+            console.log('height set to 0');
+
+            $('.question').click(function() {
+                index = $('.question').index(this);
+                index = index.toString();
+                console.log(index);
+
+                //$('.answer:eq('+ index +')').show();
+
+                if($('.answer:eq('+ index +')').is(":hidden") == true) {
+                    $(".answer:eq("+ index +")").show();
+                    //$('.answer:eq('+ index +')').css({'height':'5px'});
+                }
+                else {
+                    $('.answer:eq('+ index +')').hide()
+                }
+                
+            });
+        })
+    </script>
+
+</html>
