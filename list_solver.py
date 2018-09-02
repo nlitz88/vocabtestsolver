@@ -443,6 +443,8 @@ class list_solver(Thread):
         # BEGINNING OF CONCLUDING FUNCTIONS.
         self.currentOperation = "list completed"
         print_message("List completed. Instance finished")
+        # exits individual chrome instance. Subject to change
+        browser.quit()
         #   - potentially add preview of words in command output
         #   - provide email confirmation in command output
     
