@@ -125,6 +125,9 @@ class list_validator(Thread):
         self.link_valid = check_list(browser)
         self.creds_valid = check_credentials(browser)
 
+        # exits individual chrome instance. Subject to change
+        browser.quit()
+
 
     def get_creds_valid(self):
         return self.creds_valid
