@@ -29,12 +29,12 @@
                     </div>
                     <div class="answer">
                         <p>Acceptable links must be in the following form: </p>
-                        <img src="../../static/images/img1.png">
+                        <img src="../static/images/img1.png">
                         <p>
                             The notable component of the link is the very end: "definitions.php..."
                             as this directs the bot to the actual testing interface, which will look something like this
                         </p>
-                        <img src="../../static/images/img2.png" style = height:200px;>
+                        <img src="../static/images/img2.png" style = height:200px;>
                     </div>
                     
 
@@ -87,12 +87,12 @@
 
             //$('.answer').css({'height':'0'});
             $('.answer').hide();
-            console.log('height set to 0');
+            //console.log('height set to 0');
 
             $('.question').click(function() {
                 index = $('.question').index(this);
                 index = index.toString();
-                console.log(index);
+                //console.log(index);
 
                 //$('.answer:eq('+ index +')').show();
 
@@ -101,7 +101,7 @@
                     //$('.answer:eq('+ index +')').css({'height':'5px'});
                 }
                 else {
-                    $('.answer:eq('+ index +')').hide()
+                    $('.answer:eq('+ index +')').hide();
                 }
                 
             });
