@@ -1,5 +1,5 @@
 # vocabtestsolver
-Deployed <a href="http://vocabtestsolver.duckdns.org/">here!</a>
+Deployed <a href="http://vocabtestsolver.duckdns.org/">here!</a> -- Not  anymore!
 
 Use python 3.6 to avoid some compatibility issues. Conda is probably your best
 bet:
