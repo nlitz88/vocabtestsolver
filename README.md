@@ -6,6 +6,7 @@ bet:
 ```
 conda create --name vocabtest_env python=3.6
 conda activate vocabtest_env
+pip install -r requirements.txt
 ```
 Then, to run:
 ```
